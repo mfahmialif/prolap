@@ -130,7 +130,7 @@ class Helper
         }
     }
 
-    public function getColor($color)
+    public static function getColor($color)
     {
         $bulkData = BulkData::color;
         return $bulkData[strtolower($color)];
@@ -172,7 +172,7 @@ class Helper
         return \Str::upper($newString);
     }
 
-    public function checkRegister()
+    public static function checkRegister()
     {
         $tahun = Tahun::aktif();
 

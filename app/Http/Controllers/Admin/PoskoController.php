@@ -285,10 +285,10 @@ class PoskoController extends Controller
 
             $peserta = Peserta::findOrFail($request->peserta_id);
 
-            $checkPosko = PoskoPeserta::where('peserta_id', $peserta->id)->first();
-            if ($checkPosko) {
-                return abort(500, 'Peserta PROLAP sudah masuk di posko lain yaitu di ' . $checkPosko->posko->nama);
-            }
+            // $checkPosko = PoskoPeserta::where('peserta_id', $peserta->id)->first();
+            // if ($checkPosko) {
+            //     return abort(500, 'Peserta PROLAP sudah masuk di posko lain yaitu di ' . $checkPosko->posko->nama);
+            // }
 
             $poskoPeserta = PoskoPeserta::where([
                 ['posko_id', $posko->id],

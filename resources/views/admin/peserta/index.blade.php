@@ -79,8 +79,10 @@
                             <div class="card-header">
                                 {{-- <a href="{{ route('register') }}" class="btn btn-primary">
                                     <i class="fas fa-plus-circle mx-2"></i>Tambah Peserta</a> --}}
-                                <a href="{{ route('admin.pembayaran') }}" class="btn btn-primary">
-                                    <i class="fas fa-plus-circle mx-2"></i>Tambah Peserta</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_add_peserta">
+                                    <i class="fas fa-plus-circle mx-2"></i>Tambah Peserta
+                                </button>
+                                @include('admin.peserta.modal_add')
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" id="card_refresh">
                                         <i class="fas fa-sync-alt"></i>

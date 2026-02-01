@@ -34,10 +34,10 @@ class PoskoImport implements ToCollection, WithHeadingRow
                 
                 $this->total++;
                 
-                $checkPosko = PoskoPeserta::where('peserta_id', $peserta->id)->exists();
-                if($checkPosko){
-                    continue;
-                }
+                // $checkPosko = PoskoPeserta::where('peserta_id', $peserta->id)->exists();
+                // if($checkPosko){
+                //     continue;
+                // }
 
                 $poskoPeserta = PoskoPeserta::where([
                     ['posko_id', $this->posko->id],

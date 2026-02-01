@@ -271,6 +271,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [AdminPesertaController::class, 'index'])->name('admin.peserta');
             Route::delete('/', [AdminPesertaController::class, 'delete'])->name('admin.peserta.delete');
             Route::get('/data', [AdminPesertaController::class, 'data'])->name('admin.peserta.data');
+            Route::post('/add', [AdminPesertaController::class, 'store'])->name('admin.peserta.add');
             Route::get('/detail/{peserta}', [AdminPesertaController::class, 'detail'])->name('admin.peserta.detail');
             Route::put('/detail/{peserta}/', [AdminPesertaController::class, 'update'])->name('admin.peserta.update');
             Route::get('/detail/{peserta}/dataDokumen', [AdminPesertaController::class, 'dataDokumen'])->name('admin.peserta.dataDokumen');

@@ -21,14 +21,100 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class PesertaController extends Controller
 {
     protected $dir = BulkData::dirGdrive['dokumen'];
 
+    public function store(Request $request) {
+        try {
+            \DB::beginTransaction();
+            
+            $request->validate([
+                'nim' => 'required',
+                'nama' => 'required',
+                'prodi_id' => 'required',
+                'tahun_id' => 'required',
+                'tanggal_daftar' => 'required',
+                'jenis_kelamin' => 'required',
+                'jenis' => 'required',
+                'status_id' => 'required',
+            ]);
+
+            // Check if User exists by NIM/Username
+            $user = \App\Models\User::where('username', $request->nim)->first();
+            
+            if (!$user) {
+                // Create new User if not exists
+                $user = \App\Models\User::create([
+                    'username' => $request->nim,
+                    'nama' => $request->nama,
+                    'role_id' => 2, // Role Peserta
+                    'password' => \Hash::make($request->nim), // Password default NIM
+                    'jenis_kelamin' => $request->jenis_kelamin,
+                    'no_unik' => $request->nim,
+                ]);
+            } else {
+                // Ensure user role is compatible or just proceed to link
+                // Ideally prompt if user exists but has different role, but for now we assume correct usage or link to existing user
+            }
+
+            // Check if Peserta already exists
+            $cekPeserta = Peserta::where('user_id', $user->id)
+                            ->where('tahun_id', $request->tahun_id)
+                            ->first();
+
+            if ($cekPeserta) {
+                 return response()->json([
+                    'status' => false,
+                    'message' => 500,
+                    'data' => "Peserta dengan NIM $request->nim sudah terdaftar di tahun ini.",
+                ]);
+            }
+
+            // Create Peserta
+            $peserta = Peserta::create([
+                'user_id' => $user->id,
+                'nim' => $request->nim,
+                'nama' => $request->nama,
+                'prodi_id' => $request->prodi_id,
+                'tahun_id' => $request->tahun_id,
+                'tanggal_daftar' => $request->tanggal_daftar,
+                'jenis' => $request->jenis,
+                'status_id' => $request->status_id,
+                'nik' => $request->nik,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'nomor_hp' => $request->nomor_hp,
+                'alamat' => $request->alamat,
+                'nama_pondok' => $request->nama_pondok,
+                'keterangan' => $request->keterangan,
+            ]);
+
+            \DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 200,
+                'data' => "Berhasil menambahkan peserta baru",
+            ]);
+
+        } catch (\Throwable $th) {
+            \DB::rollback();
+            return response()->json([
+                 'status' => false,
+                'message' => 500,
+                'data' => "Gagal menambahkan data: " . $th->getMessage()
+            ]);
+        }
+    }
+
     public function index()
     {
-        $tahun = Tahun::all();
+        $tahun = Tahun::orderBy('nama', 'desc')->get();
         $status = Status::all();
         $prodi = Prodi::all();
 

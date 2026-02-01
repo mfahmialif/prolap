@@ -78,7 +78,7 @@ class ImportAll implements ToCollection, WithHeadingRow
             if (!$dataPosko) {
                 $dataPosko = new Posko();
             }
-            $dataPosko->tahun_id = 1;
+            $dataPosko->tahun_id = 2;
             $dataPosko->nama = "Posko " . $no;
             $dataPosko->lokasi = $row['lokasi'];
             $dataPosko->keterangan = 'Aman';
